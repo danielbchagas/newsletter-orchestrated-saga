@@ -2,7 +2,7 @@
 
 public class Sale
 {
-    public Sale(){}
+    public Sale() { }
 
     public Sale(Guid id, string saleNumber, DateTime date, string customerId, string customerName, string branchId, string branchName, bool isCancelled, IList<SaleItem> items)
     {
@@ -14,7 +14,7 @@ public class Sale
         BranchId = branchId;
         BranchName = branchName;
         IsCancelled = isCancelled;
-        Items = items;
+        Items = items ?? new List<SaleItem>();
     }
 
     public Guid Id { get; private set; }
@@ -28,4 +28,20 @@ public class Sale
 
     public IList<SaleItem> Items { get; private set; }
     public decimal TotalAmount => Items.Sum(i => i.Total);
+
+    public void AddItem(SaleItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+
+        Items.Add(item);
+    }
+
+    public void RemoveItem(SaleItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+
+        Items.Remove(item);
+    }
+
+    public void CancelSale() => IsCancelled = true;
 }
