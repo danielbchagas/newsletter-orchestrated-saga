@@ -1,7 +1,22 @@
 ﻿namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
-class Sale
+public class Sale
 {
+    public Sale(){}
+
+    public Sale(Guid id, string saleNumber, DateTime date, string customerId, string customerName, string branchId, string branchName, bool isCancelled, IList<SaleItem> items)
+    {
+        Id = id;
+        SaleNumber = saleNumber;
+        Date = date;
+        CustomerId = customerId;
+        CustomerName = customerName;
+        BranchId = branchId;
+        BranchName = branchName;
+        IsCancelled = isCancelled;
+        Items = items;
+    }
+
     public Guid Id { get; private set; }
     public string SaleNumber { get; private set; }
     public DateTime Date { get; private set; }
@@ -9,7 +24,8 @@ class Sale
     public string CustomerName { get; private set; }
     public string BranchId { get; private set; }
     public string BranchName { get; private set; }
-    public List<SaleItem> Items { get; private set; }
-    public decimal TotalAmount => Items.Sum(i => i.Total);
     public bool IsCancelled { get; private set; }
+
+    public IList<SaleItem> Items { get; private set; }
+    public decimal TotalAmount => Items.Sum(i => i.Total);
 }
