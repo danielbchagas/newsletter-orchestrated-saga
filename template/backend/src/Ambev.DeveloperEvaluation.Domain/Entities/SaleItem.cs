@@ -15,12 +15,12 @@ public class SaleItem : BaseEntity
         Discount = discount;
     }
 
-    public string ProductId { get; private set; }
-    public string ProductName { get; private set; }
-    public int Quantity { get; private set; }
-    public decimal UnitPrice { get; private set; }
-    public decimal Discount { get; private set; }
-    public decimal TotalAmount { get; private set; }
+    public string ProductId { get; set; }
+    public string ProductName { get; set; }
+    public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
+    public decimal Discount { get; set; }
+    public decimal TotalAmount { get; set; }
 
     public decimal ApplyDiscount()
     {
