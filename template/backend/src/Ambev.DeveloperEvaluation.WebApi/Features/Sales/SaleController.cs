@@ -62,6 +62,9 @@ public class SaleController : BaseController
     [HttpPut]
     public async Task<IActionResult> Put([FromQuery] Guid id, [FromBody] SaleTransport request, CancellationToken cancellationToken)
     {
+        if(id.CompareTo(request.Id) != 0)
+            return BadRequest("Id in query string and body must be the same");
+        
         var validation = new SaleTransportValidator().ValidateAsync(request, cancellationToken).Result;
         
         if (!validation.IsValid)
