@@ -18,6 +18,13 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UpdateSaleHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="saleRepository">The sale repository instance.</param>
+    /// <param name="mapper">The AutoMapper instance.</param>
+    /// <param name="mediator">The mediator instance.</param>
     public UpdateSaleHandler(ILogger<UpdateSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper, IMediator mediator)
     {
         _logger = logger;
@@ -26,6 +33,13 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         _mediator = mediator;
     }
     
+    /// <summary>
+    /// Handles the update of a sale.
+    /// </summary>
+    /// <param name="request">The update sale command.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The result of the update sale operation.</returns>
+    /// <exception cref="ValidationException">Thrown when validation fails.</exception>
     public async Task<UpdateSaleResult> Handle(UpdateSaleCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await new SaleTransportValidator().ValidateAsync(request.Data, cancellationToken);
@@ -71,6 +85,10 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         return new UpdateSaleResult(sale.Id);
     }
     
+    /// <summary>
+    /// Logs validation errors.
+    /// </summary>
+    /// <param name="validationResult">The validation result containing errors.</param>
     private void GenericLogError(ValidationResult validationResult)
         => _logger.LogError("Validation failed: {Errors}", validationResult.Errors);
 }

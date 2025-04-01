@@ -14,6 +14,13 @@ public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, DeleteSaleRe
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeleteSaleHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="saleRepository">The sale repository instance.</param>
+    /// <param name="mapper">The AutoMapper instance.</param>
+    /// <param name="mediator">The mediator instance.</param>
     public DeleteSaleHandler(ILogger<DeleteSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper, IMediator mediator)
     {
         _logger = logger;
@@ -22,6 +29,12 @@ public class DeleteSaleHandler : IRequestHandler<DeleteSaleCommand, DeleteSaleRe
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Handles the deletion of a sale.
+    /// </summary>
+    /// <param name="request">The delete sale command.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The result of the delete sale operation.</returns>
     public async Task<DeleteSaleResult> Handle(DeleteSaleCommand request, CancellationToken cancellationToken)
     {
         var id = await _saleRepository.DeleteAsync(request.Id, cancellationToken);

@@ -1,5 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.Notifications;
-using Ambev.DeveloperEvaluation.Application.Sales.Notifications.CreateSale;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Notifications.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.Validators;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
@@ -19,6 +18,13 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateSaleHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="saleRepository">The sale repository instance.</param>
+    /// <param name="mapper">The AutoMapper instance.</param>
+    /// <param name="mediator">The mediator instance.</param>
     public CreateSaleHandler(ILogger<CreateSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper, IMediator mediator)
     {
         _logger = logger;
@@ -27,6 +33,13 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Handles the creation of a sale.
+    /// </summary>
+    /// <param name="request">The create sale command.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The result of the create sale operation.</returns>
+    /// <exception cref="ValidationException">Thrown when validation fails.</exception>
     public async Task<CreateSaleResult> Handle(CreateSaleCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await new SaleTransportValidator().ValidateAsync(request.Data, cancellationToken);
@@ -74,6 +87,10 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
         return new CreateSaleResult(sale.Id);
     }
 
+    /// <summary>
+    /// Logs validation errors.
+    /// </summary>
+    /// <param name="validationResult">The validation result containing errors.</param>
     private void GenericLogError(ValidationResult validationResult)
         => _logger.LogError("Validation failed: {Errors}", validationResult.Errors);
 }

@@ -14,6 +14,13 @@ public class GetSaleHandler : IRequestHandler<GetSaleQuery, GetSaleResult>
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GetSaleHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="saleRepository">The sale repository instance.</param>
+    /// <param name="mapper">The AutoMapper instance.</param>
+    /// <param name="mediator">The mediator instance.</param>
     public GetSaleHandler(ILogger<GetSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper, IMediator mediator)
     {
         _logger = logger;
@@ -22,6 +29,12 @@ public class GetSaleHandler : IRequestHandler<GetSaleQuery, GetSaleResult>
         _mediator = mediator;
     }
     
+    /// <summary>
+    /// Handles the retrieval of a sale.
+    /// </summary>
+    /// <param name="request">The get sale query.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The result of the get sale operation.</returns>
     public async Task<GetSaleResult> Handle(GetSaleQuery request, CancellationToken cancellationToken)
     {
         var sale = await _saleRepository.GetAsync(s => s.Id == request.Id, cancellationToken);
