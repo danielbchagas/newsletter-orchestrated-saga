@@ -12,7 +12,7 @@ public class CreateSaleNotificationHandler : INotificationHandler<CreateSaleNoti
     
     public Task Handle(CreateSaleNotification notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Sale notification created: {Notification}", notification);
+        _logger.LogInformation("Sale created: {Notification}", notification);
 
         return Task.CompletedTask;
     }
