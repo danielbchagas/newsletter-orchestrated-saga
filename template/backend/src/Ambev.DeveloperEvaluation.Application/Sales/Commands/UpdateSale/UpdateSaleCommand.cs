@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.Commands.UpdateSale;
 
-public abstract record UpdateSaleCommand(SaleTransport Data) : IRequest<UpdateSaleResult>;
+public record UpdateSaleCommand(SaleTransport Data) : IRequest<UpdateSaleResult>;

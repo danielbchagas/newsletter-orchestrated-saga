@@ -2,4 +2,4 @@
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.Commands.DeleteSale;
 
-public abstract record DeleteSaleCommand(Guid Id) : IRequest<DeleteSaleResult>;
+public record DeleteSaleCommand(Guid Id) : IRequest<DeleteSaleResult>;

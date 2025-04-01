@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.Commands.CreateSale;
 
-public abstract record CreateSaleCommand(SaleTransport Data) : IRequest<CreateSaleResult>;
+public record CreateSaleCommand(SaleTransport Data) : IRequest<CreateSaleResult>;
