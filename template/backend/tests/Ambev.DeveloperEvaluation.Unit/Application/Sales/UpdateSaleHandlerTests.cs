@@ -1,39 +1,43 @@
-using Ambev.DeveloperEvaluation.Application.Sales.Commands.CreateSale;
-using Ambev.DeveloperEvaluation.Application.Sales.Notifications.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Commands.UpdateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Notifications.UpdateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.Transport;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
+using System.Threading;
+using System.Threading.Tasks;
+using Ambev.DeveloperEvaluation.Application.Sales.Commands.CreateSale;
 using AutoFixture;
 using FluentAssertions;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application.Sales;
 
-public class CreateSaleHandlerTests
+public class UpdateSaleHandlerTests
 {
-    private readonly Mock<ILogger<CreateSaleHandler>> _loggerMock;
+    private readonly Mock<ILogger<UpdateSaleHandler>> _loggerMock;
     private readonly Mock<ISaleRepository> _saleRepositoryMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<IMediator> _mediatorMock;
-    private readonly CreateSaleHandler _handler;
+    private readonly UpdateSaleHandler _handler;
 
-    public CreateSaleHandlerTests()
+    public UpdateSaleHandlerTests()
     {
-        _loggerMock = new Mock<ILogger<CreateSaleHandler>>();
+        _loggerMock = new Mock<ILogger<UpdateSaleHandler>>();
         _saleRepositoryMock = new Mock<ISaleRepository>();
         _mapperMock = new Mock<IMapper>();
         _mediatorMock = new Mock<IMediator>();
-        _handler = new CreateSaleHandler(_loggerMock.Object, _saleRepositoryMock.Object, _mapperMock.Object, _mediatorMock.Object);
+        _handler = new UpdateSaleHandler(_loggerMock.Object, _saleRepositoryMock.Object, _mapperMock.Object, _mediatorMock.Object);
     }
 
     // TODO: Verify if notification is sent
     [Fact]
-    public async Task Handle_CreatesSaleSuccessfully()
+    public async Task Handle_UpdatesSaleSuccessfully()
     {
         // Arrange
         var data = new Fixture()
@@ -41,7 +45,7 @@ public class CreateSaleHandlerTests
             .With(s => s.Date, DateTime.Now)
             .Create();
         var command = new Fixture()
-            .Build<CreateSaleCommand>()
+            .Build<UpdateSaleCommand>()
             .With(s => s.Data, data)
             .Create();
         var sale = new Fixture()
@@ -50,7 +54,7 @@ public class CreateSaleHandlerTests
             .Create();
         
         _mapperMock.Setup(s => s.Map<Sale>(command)).Returns(sale);
-        _saleRepositoryMock.Setup(s => s.CreateAsync(It.IsAny<Sale>(), It.IsAny<CancellationToken>())).ReturnsAsync(sale);
+        _saleRepositoryMock.Setup(s => s.UpdateAsync(It.IsAny<Sale>(), It.IsAny<CancellationToken>())).ReturnsAsync(sale);
         
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -58,7 +62,7 @@ public class CreateSaleHandlerTests
         // Assert
         result.Should().NotBeNull();
         _mapperMock.Verify(s => s.Map<Sale>(command), Times.Once);
-        _saleRepositoryMock.Verify(s => s.CreateAsync(sale, It.IsAny<CancellationToken>()), Times.Once);
+        _saleRepositoryMock.Verify(s => s.UpdateAsync(sale, It.IsAny<CancellationToken>()), Times.Once);
     }
     
     // TODO: Verify if logging is correct
@@ -71,7 +75,7 @@ public class CreateSaleHandlerTests
             .Without(s => s.Date)
             .Create();
         var command = new Fixture()
-            .Build<CreateSaleCommand>()
+            .Build<UpdateSaleCommand>()
             .Without(s => s.Data)
             .Create();
         var sale = new Fixture()
@@ -80,13 +84,13 @@ public class CreateSaleHandlerTests
             .Create();
         
         _mapperMock.Setup(s => s.Map<Sale>(command)).Returns(sale);
-        _saleRepositoryMock.Setup(s => s.CreateAsync(It.IsAny<Sale>(), It.IsAny<CancellationToken>())).ReturnsAsync(sale);
+        _saleRepositoryMock.Setup(s => s.UpdateAsync(It.IsAny<Sale>(), It.IsAny<CancellationToken>())).ReturnsAsync(sale);
         
         // Act
         await Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(command, CancellationToken.None));
 
         // Assert
         _saleRepositoryMock.Verify(r => r.CreateAsync(It.IsAny<Sale>(), It.IsAny<CancellationToken>()), Times.Never);
-        _mediatorMock.Verify(m => m.Publish(It.IsAny<CreateSaleNotification>(), It.IsAny<CancellationToken>()), Times.Never);
+        _mediatorMock.Verify(m => m.Publish(It.IsAny<UpdateSaleNotification>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }
