@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Ambev.DeveloperEvaluation.ORM;
@@ -9,6 +10,8 @@ namespace Ambev.DeveloperEvaluation.ORM;
 public class DefaultContext : DbContext
 {
     public DbSet<User> Users { get; set; }
+    public DbSet<Sale> Sales { get; internal set; }
+    public DbSet<SaleItem> SaleItems { get; internal set; }
 
     public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
     {

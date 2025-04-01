@@ -1,12 +1,13 @@
-﻿namespace Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
 
-public class SaleItem
+namespace Ambev.DeveloperEvaluation.Domain.Entities;
+
+public class SaleItem : BaseEntity
 {
     public SaleItem(){}
 
-    public SaleItem(Guid id, string productId, string productName, int quantity, decimal unitPrice, decimal discount)
+    public SaleItem(string productId, string productName, int quantity, decimal unitPrice, decimal discount)
     {
-        Id = id;
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
@@ -14,11 +15,20 @@ public class SaleItem
         Discount = discount;
     }
 
-    public Guid Id { get; private set; }
     public string ProductId { get; private set; }
     public string ProductName { get; private set; }
     public int Quantity { get; private set; }
     public decimal UnitPrice { get; private set; }
     public decimal Discount { get; private set; }
-    public decimal Total => (UnitPrice * Quantity) - Discount;
+    public decimal TotalAmount { get; private set; }
+
+    public decimal ApplyDiscount()
+    {
+        if (Quantity >= 4)
+            TotalAmount = (UnitPrice * Quantity) * 0.9m;
+        else
+            TotalAmount = UnitPrice * Quantity;
+        
+        return TotalAmount;
+    }
 }

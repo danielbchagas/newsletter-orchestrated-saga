@@ -1,11 +1,12 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Commands.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Transport;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Domain.Validation;
+namespace Ambev.DeveloperEvaluation.Application.Sales.Validators;
 
-public class SaleValidator : AbstractValidator<Sale>
+public class SaleTransportValidator : AbstractValidator<SaleTransport>
 {
-    public SaleValidator()
+    public SaleTransportValidator()
     {
         RuleFor(sale => sale.SaleNumber)
             .NotEmpty().WithMessage("{PropertyName} is required.")
