@@ -1,6 +1,6 @@
 ﻿namespace Ambev.DeveloperEvaluation.Application.Sales.Transport;
 
-public abstract record SaleTransport
+public record SaleTransport
 {
     public required Guid Id { get; init; }
     public required string SaleNumber { get; init; }

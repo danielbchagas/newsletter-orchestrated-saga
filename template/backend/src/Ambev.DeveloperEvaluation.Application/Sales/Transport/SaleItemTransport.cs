@@ -1,6 +1,6 @@
 ﻿namespace Ambev.DeveloperEvaluation.Application.Sales.Transport;
 
-public class SaleItemTransport
+public record SaleItemTransport
 {
     public Guid Id { get; init; }
     public required string ProductId { get; init; }

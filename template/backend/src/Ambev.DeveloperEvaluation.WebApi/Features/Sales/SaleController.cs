@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Application.Sales.Commands.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.Commands.UpdateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.Queries.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sales.Transport;
+using Ambev.DeveloperEvaluation.Application.Sales.Validators;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,11 @@ public class SaleController : BaseController
     [HttpPost]
     public IActionResult Post([FromBody] SaleTransport request, CancellationToken cancellationToken)
     {
+        var validation = new SaleTransportValidator().ValidateAsync(request, cancellationToken).Result;
+        
+        if (!validation.IsValid)
+            return BadRequest(validation.Errors.Select(e => e.ErrorMessage));
+        
         var command = new CreateSaleCommand(request);
         var result = _mediator.Send(command, cancellationToken).Result;
         return Ok(result);
@@ -54,10 +60,15 @@ public class SaleController : BaseController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut]
-    public IActionResult Put([FromQuery] Guid id, [FromBody] SaleTransport request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Put([FromQuery] Guid id, [FromBody] SaleTransport request, CancellationToken cancellationToken)
     {
+        var validation = new SaleTransportValidator().ValidateAsync(request, cancellationToken).Result;
+        
+        if (!validation.IsValid)
+            return BadRequest(validation.Errors.Select(e => e.ErrorMessage));
+        
         var command = new UpdateSaleCommand(request);
-        var result = _mediator.Send(request, cancellationToken).Result;
+        var result = await _mediator.Send(request, cancellationToken);
         return Ok(result);
     }
     
