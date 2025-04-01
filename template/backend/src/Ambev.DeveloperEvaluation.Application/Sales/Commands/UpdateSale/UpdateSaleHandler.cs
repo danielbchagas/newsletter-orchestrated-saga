@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.Validators;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Notifications.UpdateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Validators;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Validation;
@@ -15,12 +16,14 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
     private readonly ILogger<UpdateSaleHandler> _logger;
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public UpdateSaleHandler(ILogger<UpdateSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper)
+    public UpdateSaleHandler(ILogger<UpdateSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper, IMediator mediator)
     {
         _logger = logger;
         _saleRepository = saleRepository;
         _mapper = mapper;
+        _mediator = mediator;
     }
     
     public async Task<UpdateSaleResult> Handle(UpdateSaleCommand request, CancellationToken cancellationToken)
@@ -63,7 +66,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
             return new UpdateSaleResult(null);
         }
         
-        _logger.LogInformation("Sale created with ID: {SaleId}", sale.Id);
+        await _mediator.Publish(new UpdateSaleNotification(request.Data), cancellationToken);
         
         return new UpdateSaleResult(sale.Id);
     }

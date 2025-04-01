@@ -1,4 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.Validators;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Notifications;
+using Ambev.DeveloperEvaluation.Application.Sales.Notifications.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Validators;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Validation;
@@ -15,12 +17,14 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     private readonly ILogger<CreateSaleHandler> _logger;
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
-
-    public CreateSaleHandler(ILogger<CreateSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper)
+    private readonly IMediator _mediator;
+    
+    public CreateSaleHandler(ILogger<CreateSaleHandler> logger, ISaleRepository saleRepository, IMapper mapper, IMediator mediator)
     {
         _logger = logger;
         _saleRepository = saleRepository;
         _mapper = mapper;
+        _mediator = mediator;
     }
 
     public async Task<CreateSaleResult> Handle(CreateSaleCommand request, CancellationToken cancellationToken)
@@ -64,8 +68,8 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
         }
         
         await _saleRepository.CreateAsync(sale, cancellationToken);
-        
-        _logger.LogInformation("Sale created with ID: {SaleId}", sale.Id);
+
+        await _mediator.Publish(new CreateSaleNotification(request.Data), cancellationToken);
         
         return new CreateSaleResult(sale.Id);
     }
