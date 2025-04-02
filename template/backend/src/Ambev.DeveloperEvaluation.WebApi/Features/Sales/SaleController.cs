@@ -26,7 +26,7 @@ public class SaleController : BaseController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet]
-    public IActionResult Get(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetSaleQuery(id);
         var result = _mediator.Send(query, cancellationToken).Result;
@@ -40,7 +40,7 @@ public class SaleController : BaseController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult Post([FromBody] SaleTransport request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Post([FromBody] SaleTransport request, CancellationToken cancellationToken)
     {
         var validation = new SaleTransportValidator().ValidateAsync(request, cancellationToken).Result;
         
@@ -82,7 +82,7 @@ public class SaleController : BaseController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpDelete]
-    public IActionResult Delete([FromQuery] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete([FromQuery] Guid id, CancellationToken cancellationToken)
     {
         var command = new DeleteSaleCommand(id);
         var result = _mediator.Send(command, cancellationToken).Result;
