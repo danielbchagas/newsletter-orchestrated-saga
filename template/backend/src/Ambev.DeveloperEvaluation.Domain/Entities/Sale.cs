@@ -6,7 +6,7 @@ public class Sale : BaseEntity
 {
     public Sale() { }
 
-    public Sale(string saleNumber, DateTime date, string customerId, string customerName, string branchId, string branchName, bool isCancelled, IList<SaleItem> items)
+    public Sale(string saleNumber, DateTime date, string customerId, string customerName, string branchId, string branchName, bool isCancelled)
     {
         SaleNumber = saleNumber;
         Date = date;
@@ -15,7 +15,7 @@ public class Sale : BaseEntity
         BranchId = branchId;
         BranchName = branchName;
         IsCancelled = isCancelled;
-        Items = items ?? new List<SaleItem>();
+        Items = new List<SaleItem>();
     }
 
     public string SaleNumber { get; set; }
